@@ -45,7 +45,7 @@ class CareerProfileSerializer(ApplicantProfileSerializer):
 
     class Meta(ApplicantProfileSerializer.Meta):
         fields = ApplicantProfileSerializer.Meta.fields + ("summary", "phone", "notice_period_days", "public_visibility", "experiences", "education")
-        read_only_fields = ("id", "email", "created_at", "updated_at")
+        read_only_fields = ("id", "email", "public_visibility", "created_at", "updated_at")
 
     def validate(self, attrs):
         for key in ("portfolio_url", "linkedin_url", "github_url"):
