@@ -146,6 +146,8 @@ I chose these tests first because they protect trust. A premium job platform nee
 
 ## Implementation Log
 
+- Listing reports belong to the reporting candidate and stay private from employers and other candidates. One report per candidate/listing avoids duplicate tickets; the server bounds daily intake. Operators resolve or dismiss with a reporter-visible reason and an audit record. Closing a reported job preserves its applications and immutable submitted files.
+
 - Operator moderation uses a separate staff permission and distinct company-identity, recruiter-authority and publication decisions. Row locks and expected update timestamps reject stale reviews. Every decision records actor, reason, evidence method and before/after state in an audit relation with read-only admin access. Admin trust fields cannot bypass this workflow; approval checks employer authority before publishing.
 
 - Hiring stages follow a server-owned transition graph. Updates lock the application and compare its expected status, preventing stale screens from overwriting a newer stage or withdrawal. Repeated requests are idempotent; terminal stages cannot be reopened. Candidate-visible events describe the stage change without including private notes.
