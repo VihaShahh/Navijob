@@ -43,7 +43,7 @@ class RegisterView(AnonymousAccountView):
 
 
 def account_payload(user, state):
-    return {"id": user.pk, "name": user.get_full_name(), "email": user.email, "role": state.role, "email_verified": state.email_verified}
+    return {"id": user.pk, "name": user.get_full_name(), "email": user.email, "role": state.role, "email_verified": state.email_verified, "is_operator": user.is_staff and user.has_perm("core.moderate_marketplace")}
 
 
 class LoginView(AnonymousAccountView):

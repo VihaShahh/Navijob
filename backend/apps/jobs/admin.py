@@ -9,7 +9,7 @@ class JobAdmin(admin.ModelAdmin):
     list_filter = ("status", "seniority", "work_mode", "job_type", "is_premium", "is_verified")
     prepopulated_fields = {"slug": ("title",)}
     search_fields = ("title", "company__name", "location", "skills")
-    readonly_fields = ("created_at", "updated_at")
+    readonly_fields = ("created_at", "updated_at", "status", "is_verified", "review_status", "review_feedback", "review_requested_at")
     date_hierarchy = "published_at"
 
 

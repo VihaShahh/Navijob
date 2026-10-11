@@ -146,6 +146,8 @@ I chose these tests first because they protect trust. A premium job platform nee
 
 ## Implementation Log
 
+- Operator moderation uses a separate staff permission and distinct company-identity, recruiter-authority and publication decisions. Row locks and expected update timestamps reject stale reviews. Every decision records actor, reason, evidence method and before/after state in an audit relation with read-only admin access. Admin trust fields cannot bypass this workflow; approval checks employer authority before publishing.
+
 - Hiring stages follow a server-owned transition graph. Updates lock the application and compare its expected status, preventing stale screens from overwriting a newer stage or withdrawal. Repeated requests are idempotent; terminal stages cannot be reopened. Candidate-visible events describe the stage change without including private notes.
 
 - Applicant review requires reviewed recruiter authority and scopes every read/download/note to the recruiter’s company. List responses use compact frozen candidate summaries; full submitted details are retrieved per application. Private team notes live in a separate relation, never appear in candidate history, and cannot be authored through client-supplied user IDs.

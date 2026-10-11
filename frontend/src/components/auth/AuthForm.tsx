@@ -12,7 +12,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const signup = mode === "signup";
   const search = useSearchParams();
   const router = useRouter();
-  const { refresh } = useSession();
+  const { signIn } = useSession();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [fields, setFields] = useState<Record<string, string>>({});
@@ -28,7 +28,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         setMessage(result.detail);
       } else {
         const { user } = await mutateApi<{ user: AccountUser }>("auth/login/", data);
-        refresh();
+        signIn(user);
         router.replace(safeReturnPath(search.get("next"), user.role));
       }
     } catch (reason) {
