@@ -12,7 +12,7 @@ from apps.jobs.models import JobApplication, SavedJob
 from apps.resumes.models import Resume
 from apps.resumes.serializers import ResumeMetadataSerializer
 from .career_serializers import CareerProfileSerializer, ProjectSerializer
-from .models import ApplicantProfile
+from .models import ApplicantProfile, DeletionRequest
 from .permissions import IsVerifiedAccount
 
 
@@ -61,6 +61,7 @@ class ExportView(APIView):
             "applications": ApplicationSerializer(applications, many=True).data,
             "saved_jobs": list(SavedJob.objects.filter(applicant__user=user).values("job_id", "created_at")),
             "reports": ReportSerializer(ListingReport.objects.filter(reporter=user).select_related("job"), many=True).data,
+            "deletion_requests": list(DeletionRequest.objects.filter(user=user).values("id", "status", "reason", "response", "created_at")),
             "file_handling": "PDFs are available through the authenticated download links in this export. Submitted application copies are separate from editable resume versions. Employer-private notes are excluded.",
         }
         response = HttpResponse(json.dumps(payload, cls=DjangoJSONEncoder, indent=2), content_type="application/json")

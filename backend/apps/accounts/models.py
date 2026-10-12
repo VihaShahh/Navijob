@@ -21,6 +21,17 @@ class AccountState(TimeStampedModel):
         return f"{self.user.email}: {self.role}"
 
 
+class DeletionRequest(TimeStampedModel):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="deletion_requests")
+    status = models.CharField(max_length=24, default="pending", choices=[("pending", "Pending review"), ("cancelled", "Cancelled"), ("access_disabled", "Access disabled; erasure pending"), ("declined", "Declined")])
+    reason = models.TextField(max_length=2000, blank=True)
+    response = models.TextField(max_length=2000, blank=True)
+
+    class Meta:
+        ordering = ["-created_at", "-pk"]
+        constraints = [models.UniqueConstraint(fields=["user"], condition=models.Q(status="pending"), name="one_pending_deletion_request")]
+
+
 class ApplicantProfile(TimeStampedModel):
     class WorkMode(models.TextChoices):
         REMOTE = "remote", "Remote"

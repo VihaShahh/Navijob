@@ -8,7 +8,7 @@ import { ActionButton, ButtonLink, LoadingState, Notice } from "@/components/ui/
 import { PublicLayout } from "./PublicLayout";
 
 const candidateLinks = [["/candidate", "Overview"], ["/candidate/profile", "Career profile"], ["/candidate/experience", "Experience"], ["/candidate/education", "Education"], ["/candidate/projects", "Projects"], ["/candidate/resumes", "Resume versions"], ["/candidate/saved", "Saved jobs"], ["/candidate/applications", "Applications"], ["/candidate/updates", "Updates"], ["/candidate/settings", "Privacy & settings"]];
-const recruiterLinks = [["/recruiter", "Overview"], ["/recruiter/setup", "Company setup"], ["/recruiter/jobs", "Your roles"], ["/recruiter/applicants", "Applications"], ["/recruiter/updates", "Updates"]];
+const recruiterLinks = [["/recruiter", "Overview"], ["/recruiter/setup", "Company setup"], ["/recruiter/jobs", "Your roles"], ["/recruiter/applicants", "Applications"], ["/recruiter/updates", "Updates"], ["/recruiter/settings", "Privacy & settings"]];
 
 export function Workspace({ children, role }: { children: ReactNode; role: "candidate" | "recruiter" }) {
   const { user, loading, error, refresh } = useSession();

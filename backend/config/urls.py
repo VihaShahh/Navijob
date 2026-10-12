@@ -3,8 +3,13 @@ from django.urls import include, path
 from apps.core.views import csrf_token, health
 from apps.core.moderation import ReviewDecisionView, ReviewQueueView
 from apps.core.reports import ReportView, OperatorReportView, OperatorReportDecisionView
+from apps.accounts.deletion import DeletionView, CancelDeletionView, OperatorDeletionView, OperatorDeletionDecisionView
 
 urlpatterns = [
+    path("api/me/deletion/", DeletionView.as_view()),
+    path("api/me/deletion/<int:request_id>/cancel/", CancelDeletionView.as_view()),
+    path("api/operator/deletion/", OperatorDeletionView.as_view()),
+    path("api/operator/deletion/<int:request_id>/", OperatorDeletionDecisionView.as_view()),
     path("api/reports/", ReportView.as_view()),
     path("api/operator/reports/", OperatorReportView.as_view()),
     path("api/operator/reports/<int:report_id>/", OperatorReportDecisionView.as_view()),

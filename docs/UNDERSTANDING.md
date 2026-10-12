@@ -146,6 +146,8 @@ I chose these tests first because they protect trust. A premium job platform nee
 
 ## Implementation Log
 
+- Deletion is an explicit owner-scoped request with cancellation while pending. Operators record access removal or a reasoned decline; approval deactivates authentication and public visibility but deliberately reports erasure as pending. Submitted snapshots, employer-held copies and private files require a retention/erasure procedure before a real launch. The request workflow does not claim physical erasure or silently destroy application history.
+
 - Privacy controls update only the signed-in account’s open-to-work preference and cannot publish a profile. Authenticated JSON exports contain owner-scoped career data, resume metadata and private download links, submissions and reports. They omit passwords, other users and employer notes. PDF bytes remain behind the same authenticated file endpoints, and export responses are no-store attachments.
 
 - Listing reports belong to the reporting candidate and stay private from employers and other candidates. One report per candidate/listing avoids duplicate tickets; the server bounds daily intake. Operators resolve or dismiss with a reporter-visible reason and an audit record. Closing a reported job preserves its applications and immutable submitted files.

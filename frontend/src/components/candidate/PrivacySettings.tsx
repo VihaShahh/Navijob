@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { ActionButton, LoadingState, Notice } from "@/components/ui/Controls";
 import { mutateApi } from "@/lib/api";
 import { useResource } from "@/lib/useResource";
+import { DeletionRequests } from "./DeletionRequests";
 
 type Preferences = { is_open_to_work: boolean | null; public_visibility: boolean; sharing: string };
 
@@ -22,5 +23,5 @@ function PreferenceForm({ data }: { data: Preferences }) {
 
 export function PrivacySettings() {
   const { data, loading, error, refresh } = useResource<Preferences>("me/privacy/");
-  return <section className="stack"><p className="eyebrow">Your information, your choices</p><h1>Privacy &amp; settings</h1>{loading ? <LoadingState /> : error ? <Notice kind="error">{error} <ActionButton onClick={refresh}>Try again</ActionButton></Notice> : data && <PreferenceForm data={data} />}<section className="panel stack"><h2>Take a copy of your data.</h2><p className="muted">Download your account, career profile, projects, saved roles, reports and submitted applications as JSON. Resume metadata includes private download links; download the PDFs separately while signed in. Hiring teams’ private notes are excluded.</p><a className="button button--outline" href="/api/me/export/">Download account data</a></section></section>;
+  return <section className="stack"><p className="eyebrow">Your information, your choices</p><h1>Privacy &amp; settings</h1>{loading ? <LoadingState /> : error ? <Notice kind="error">{error} <ActionButton onClick={refresh}>Try again</ActionButton></Notice> : data && <PreferenceForm data={data} />}<section className="panel stack"><h2>Take a copy of your data.</h2><p className="muted">Download your account, career profile, projects, saved roles, reports and submitted applications as JSON. Resume metadata includes private download links; download the PDFs separately while signed in. Hiring teams’ private notes are excluded.</p><a className="button button--outline" href="/api/me/export/">Download account data</a></section><DeletionRequests /></section>;
 }
