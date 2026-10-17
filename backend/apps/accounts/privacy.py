@@ -45,6 +45,7 @@ class ExportView(APIView):
 
     def get(self, request):
         user = request.user
+        from apps.notifications.models import ApplicationUpdate
         profile = ApplicantProfile.objects.filter(user=user).select_related("user").prefetch_related("experiences", "education", "projects").first()
         applications = JobApplication.objects.filter(applicant__user=user).select_related("job", "job__company").prefetch_related("events")
         resumes = []
@@ -62,6 +63,7 @@ class ExportView(APIView):
             "saved_jobs": list(SavedJob.objects.filter(applicant__user=user).values("job_id", "created_at")),
             "reports": ReportSerializer(ListingReport.objects.filter(reporter=user).select_related("job"), many=True).data,
             "deletion_requests": list(DeletionRequest.objects.filter(user=user).values("id", "status", "reason", "response", "created_at")),
+            "updates": list(ApplicationUpdate.objects.filter(user=user).values("title", "body", "href", "created_at", "read_at")),
             "file_handling": "PDFs are available through the authenticated download links in this export. Submitted application copies are separate from editable resume versions. Employer-private notes are excluded.",
         }
         response = HttpResponse(json.dumps(payload, cls=DjangoJSONEncoder, indent=2), content_type="application/json")
