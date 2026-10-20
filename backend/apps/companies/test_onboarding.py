@@ -25,6 +25,14 @@ class CompanyOnboardingTests(APITestCase):
         self.user.refresh_from_db()
         self.assertEqual(self.client.get("/api/recruiter/company/").status_code, 403)
 
+    def test_correcting_rejected_company_returns_it_to_pending_review(self):
+        response = self.client.post("/api/recruiter/company/", {"name": "Example", "declaration": True}, format="json")
+        Company.objects.filter(pk=response.data["company"]["id"]).update(review_status="rejected", review_feedback="Clarify company context")
+        response = self.client.patch("/api/recruiter/company/", {"description": "Updated company context"}, format="json")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["company"]["review_status"], "pending")
+        self.assertFalse(response.data["company"]["is_verified"])
+
     def test_review_flags_and_foreign_company_ids_cannot_be_changed(self):
         self.client.post("/api/recruiter/company/", {"name": "Example", "declaration": True}, format="json")
         other = Company.objects.create(name="Other", slug="other-company")

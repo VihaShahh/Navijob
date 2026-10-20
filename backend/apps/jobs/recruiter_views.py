@@ -71,7 +71,7 @@ class RecruiterJobViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         recruiter = recruiter_for(self.request.user, manage=True)
         slug = f"{slugify(serializer.validated_data['title'])[:210] or 'role'}-{uuid4().hex[:10]}"
-        serializer.save(company=recruiter.company, posted_by=recruiter, slug=slug, status="draft", review_status="pending", source="Employer supplied")
+        serializer.save(company=recruiter.company, posted_by=recruiter, slug=slug, status="draft", review_status="pending", is_sample=recruiter.company.is_sample, source="Fictional local preview" if recruiter.company.is_sample else "Employer supplied")
 
     @transaction.atomic
     def perform_update(self, serializer):

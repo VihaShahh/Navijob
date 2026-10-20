@@ -11,6 +11,7 @@ from apps.accounts.models import RecruiterProfile
 from apps.accounts.permissions import IsRecruiter
 from .models import Company
 from .serializers import CompanyDetailSerializer
+from django.conf import settings
 
 
 class CompanySetupSerializer(serializers.ModelSerializer):
@@ -54,7 +55,7 @@ class CompanyOnboardingView(APIView):
             raise ValidationError("Confirm that you represent this company or have permission to hire for it.")
         title = values.pop("recruiter_title", "")
         slug = f"{slugify(values['name'])[:180] or 'company'}-{uuid4().hex[:10]}"
-        company = Company.objects.create(slug=slug, **values)
+        company = Company.objects.create(slug=slug, is_sample=getattr(settings, "NAVIJOB_ALLOW_SAMPLE_SEED", False), **values)
         recruiter = RecruiterProfile.objects.create(user=request.user, company=company, title=title, can_manage_company=True, authority_declaration_at=timezone.now())
         return Response(onboarding_payload(recruiter), status=201)
 
@@ -73,7 +74,10 @@ class CompanyOnboardingView(APIView):
                     raise ValidationError({field: "Ask the review team to change a reviewed company identity."})
         values.pop("declaration", None)
         title = values.pop("recruiter_title", None)
-        serializer.save()
+        if not company.is_verified:
+            serializer.save(review_status="pending", review_feedback="")
+        else:
+            serializer.save()
         if title is not None:
             recruiter.title = title
             recruiter.save(update_fields=["title", "updated_at"])
