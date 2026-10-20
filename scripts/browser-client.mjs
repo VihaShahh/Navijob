@@ -42,9 +42,9 @@ export async function connectBrowser() {
   if (!["localhost", "127.0.0.1"].includes(new URL(site).hostname)) throw new Error("Browser journeys may mutate only a local preview.");
   await call("Runtime.enable");
   await call("Page.enable");
-  const navigate = async (path, text) => {
+  const navigate = async (path, text, destination = path.split("?")[0]) => {
     await call("Page.navigate", { url: `${site}${path}` });
-    await until(`location.pathname === ${JSON.stringify(path.split("?")[0])} && document.readyState === "complete"`, path);
+    await until(`location.pathname === ${JSON.stringify(destination)} && document.readyState === "complete"`, path);
     if (text) await until(`document.body.innerText.includes(${JSON.stringify(text)})`, text);
   };
   const fill = async (name, value, scope = "document") => {
@@ -66,6 +66,7 @@ export async function connectBrowser() {
   })()`);
   };
   const screenshot = async name => {
+    await evaluate("window.scrollTo({top:0, behavior:'instant'})");
     const folder = process.env.NAVIJOB_BROWSER_ARTIFACTS || "/tmp/navijob-browser-artifacts";
     mkdirSync(folder, { recursive: true });
     const result = await call("Page.captureScreenshot", { format: "png", captureBeyondViewport: false });

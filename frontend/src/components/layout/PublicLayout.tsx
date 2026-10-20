@@ -11,5 +11,5 @@ export function SiteFooter() {
 }
 
 export function PublicLayout({ children }: { children: ReactNode }) {
-  return <><SiteHeader /><main id="main">{children}</main><SiteFooter /></>;
+  return <><SiteHeader /><main id="main" tabIndex={-1}>{children}</main><SiteFooter /></>;
 }

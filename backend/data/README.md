@@ -1,6 +1,6 @@
 # Backend Demo Data
 
-This folder contains static JSON fixtures for demo-only experiences.
+This folder contains static fictional JSON fixtures for demo-only experiences. Company names, review flags, roles and candidate histories are synthetic; they do not establish real vacancies or verified partnerships.
 
 The files are intentionally plain JSON:
 

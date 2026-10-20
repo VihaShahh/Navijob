@@ -11,7 +11,7 @@ from apps.core.models import TimeStampedModel
 class JobQuerySet(models.QuerySet):
     def available(self):
         now = timezone.now()
-        return self.filter(status="published", review_status="approved", is_active=True).filter(Q(expires_at__isnull=True) | Q(expires_at__gt=now)).filter(Q(application_deadline__isnull=True) | Q(application_deadline__gte=timezone.localdate()))
+        return self.filter(status="published", review_status="approved", is_active=True, company__is_verified=True, company__review_status="approved").filter(Q(expires_at__isnull=True) | Q(expires_at__gt=now)).filter(Q(application_deadline__isnull=True) | Q(application_deadline__gte=timezone.localdate()))
 
 
 class Job(TimeStampedModel):
@@ -156,7 +156,7 @@ class Job(TimeStampedModel):
 
     @property
     def accepting_applications(self):
-        return self.is_active and self.status == self.Status.PUBLISHED and self.review_status == self.ReviewStatus.APPROVED and (not self.expires_at or self.expires_at > timezone.now()) and (not self.application_deadline or self.application_deadline >= timezone.localdate())
+        return self.is_active and self.status == self.Status.PUBLISHED and self.review_status == self.ReviewStatus.APPROVED and self.company.is_verified and self.company.review_status == "approved" and (not self.expires_at or self.expires_at > timezone.now()) and (not self.application_deadline or self.application_deadline >= timezone.localdate())
 
 
 class SavedJob(TimeStampedModel):

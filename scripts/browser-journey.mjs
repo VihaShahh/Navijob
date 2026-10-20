@@ -39,7 +39,7 @@ try {
   assert.equal((await api("health/")).status, 200, "same-origin proxy");
   await screenshot("public-jobs"); await mobile("public-jobs");
   console.log("Public discovery and same-origin API passed.");
-  await navigate("/candidate/profile");
+  await navigate("/candidate/profile", undefined, "/login");
   await until('location.pathname === "/login"', "anonymous workspace redirect");
   await navigate("/signup", "Your next chapter starts here.");
   await fill("name", "Fictional Journey Candidate"); await fill("email", email); await fill("password", password);
@@ -118,7 +118,7 @@ try {
   await navigate("/operator", `Fictional journey role ${stamp}`);
   const scope = `[...document.querySelectorAll('article')].find(el => el.querySelector('h3')?.textContent === ${JSON.stringify(`Fictional journey role ${stamp}`)})`;
   await fill("method", "Fictional local browser review", scope); await fill("reason", "Synthetic role approved for local journey verification only", scope);
-  await click("Record decision", scope); await expectText("Synthetic role approved");
+  await click("Record decision", scope); await until(`!(${scope})`, "role publication decision completed");
   await screenshot("operator-reviews"); await mobile("operator-reviews");
   await navigate("/operator/reports", `Fictional local journey report ${stamp}`);
   const reportScope = `[...document.querySelectorAll('article')].find(el => el.textContent.includes('Fictional local journey report ${stamp}'))`;
@@ -140,6 +140,18 @@ try {
   await click("Withdraw application");
   await click("Confirm withdrawal"); await expectText("Withdrawn");
   await navigate("/recruiter/applicants"); await expectText("This area is for recruiter accounts");
+  await navigate("/forgot-password", "Send link ↗");
+  await fill("email", email); await click("Send link ↗"); await expectText("If");
+  const reset = JSON.parse(shell(`import json; from django.contrib.auth import get_user_model; from django.contrib.auth.tokens import default_token_generator; from django.utils.http import urlsafe_base64_encode; from django.utils.encoding import force_bytes; u=get_user_model().objects.get(email=${JSON.stringify(email)}); print(json.dumps({'uid': urlsafe_base64_encode(force_bytes(u.pk)), 'token': default_token_generator.make_token(u)}))`));
+  await navigate(`/reset-password?uid=${reset.uid}&token=${reset.token}`, "New password");
+  await fill("password", "Recovered-Journey-42!"); await fill("confirm_password", "Mismatch-Journey-42!"); await click("Save new password ↗"); await expectText("The passwords do not match");
+  await fill("confirm_password", "Recovered-Journey-42!"); await click("Save new password ↗"); await expectText("password");
+  await until('!document.querySelector("input[name=password]")', "password reset receipt");
+  assert.equal((await api("auth/session/")).data.user, null, "password reset invalidates old session");
+  await login(email, "Recovered-Journey-42!", "/candidate");
+  await call("Network.clearBrowserCookies"); await navigate("/candidate/projects", undefined, "/login"); await until('location.pathname === "/login"', "expired session redirect");
+  await fill("email", email); await fill("password", "Recovered-Journey-42!"); await click("Sign in ↗");
+  await until('location.pathname === "/candidate/projects" && document.body.innerText.includes("Fictional Journey Project")', "safe intended return after session expiry");
   assert.deepEqual(browser.exceptions, [], "browser runtime exceptions");
-  console.log(JSON.stringify({ ok: true, email, application: application.id, journeys: ["anonymous redirect", "signup", "confirmation", "profile", "PDF upload", "saved role", "review/submit", "immutable snapshot/PDF", "duplicate application", "private report", "deletion request/cancel", "recruiter stage/note", "role draft/review", "operator publish/report", "export privacy", "updates/read", "withdrawal", "role boundary"], screenshots: "/tmp/navijob-browser-artifacts" }, null, 2));
+  console.log(JSON.stringify({ ok: true, email, application: application.id, journeys: ["anonymous redirect", "signup", "confirmation", "profile/career records/projects", "PDF upload", "saved role", "review/submit", "immutable snapshot/PDF", "duplicate application", "private report", "deletion request/cancel", "recruiter stage/note", "role draft/review", "operator publish/report", "export privacy", "updates/read", "withdrawal", "role boundary", "password recovery/reset", "session expiry/safe return"], screenshots: "/tmp/navijob-browser-artifacts" }, null, 2));
 } finally { browser.close(); }

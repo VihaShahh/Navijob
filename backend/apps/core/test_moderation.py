@@ -5,6 +5,7 @@ from rest_framework.test import APITestCase
 from apps.accounts.test_career_api import candidate
 from apps.companies.testing import recruiter
 from apps.jobs.tests import create_job
+from apps.jobs.testing import submitted_application
 from .models import ReviewDecision
 
 
@@ -61,3 +62,16 @@ class ModerationTests(APITestCase):
             self.assertEqual(self.client.get("/api/operator/reviews/").status_code, 403)
             self.assertEqual(self.decision("company", self.company).status_code, 403)
         self.assertFalse(ReviewDecision.objects.exists())
+
+    def test_revoking_company_identity_stops_discovery_and_new_applications(self):
+        self.assertEqual(self.decision("company", self.company).status_code, 201)
+        self.company.refresh_from_db()
+        job = create_job(self.company, application_mode="native", apply_url="")
+        user = candidate("revoked-company@example.com")
+        application = submitted_application(user, job)
+        self.assertEqual(self.decision("company", self.company, decision="reject", reason="Identity review revoked").status_code, 201)
+        self.assertEqual(self.client.get("/api/jobs/").data["count"], 0)
+        self.client.force_authenticate(user)
+        self.assertEqual(self.client.get(f"/api/applications/{application.pk}/").status_code, 200)
+        detail = self.client.get(f"/api/jobs/{job.slug}/")
+        self.assertFalse(detail.data["accepting_applications"])

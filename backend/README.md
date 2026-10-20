@@ -1,78 +1,30 @@
-# Navijob Backend
+# NaviJob backend
 
-Django backend scaffold with models aligned to the Supabase/Postgres schema.
+Django/DRF owns authenticated sessions, private career data, resume versions,
+reviewed jobs and immutable applications. See the [architecture](../docs/UNDERSTANDING.md)
+and [root README](../README.md) for setup and the complete local preview workflow.
 
-Current frontend writes directly to Supabase for waitlist. Later, point the frontend to Django API:
+Use `--settings=config.settings.preview` for local migrations, seeding and the
+preview server. It isolates SQLite, uploads and console mail from configured remote
+services. Use `--settings=config.settings.test` for system checks, migration checks
+and tests. Do not migrate a configured remote database during local validation.
 
-```txt
-POST /api/waitlist/
-```
+## Operations
 
-## Local setup
+A confirmed application account with staff status and the
+`core.moderate_marketplace` permission can use `/operator` on the frontend. Company
+identity, recruiter authority and publication decisions record reasons and evidence
+methods. Methods shown on company profiles must contain no sensitive details.
+Applications and audit records are read-only in admin; hiring changes go through
+server-validated transition APIs. Review queues show the oldest 100 requests.
 
-```bash
-cd backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements/local.txt
-cp .env.example .env
-python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
-```
+Production settings require a private secret of at least 50 characters and HTTPS.
+Configure private upload storage and real email delivery, run `collectstatic`, and
+review database, backup, retention and erasure arrangements before a live pilot.
+The new initial migrations for legacy waitlist/payment/subscription tables are for
+fresh databases; existing installations must compare their actual schemas before
+applying or marking them as present. No remote migration was performed here.
 
-## Supabase setup
-
-1. Open Supabase SQL Editor.
-2. Run `supabase_schema.sql`.
-3. Copy your project URL and anon key into `frontend/.env.local`.
-4. Copy your database connection string into `backend/.env` as `DATABASE_URL`.
-
-## Notes
-
-- `waitlist_leads` table is shared by frontend and Django.
-- Frontend inserts via Supabase anon key and RLS insert policy.
-- Django connects using the Postgres connection string.
-- Never put Supabase service role key in frontend.
-
-## Job Marketplace Backend
-
-The backend now includes the first marketplace foundation:
-
-- `Company`: startup profile, stage, size, verification, and premium partner flags.
-- `ApplicantProfile`: candidate job-search profile linked to a Django user.
-- `RecruiterProfile`: hiring-side profile linked to a Django user and company.
-- `Job`: premium startup listing with status, compensation, equity, skills, and curation fields.
-- `JobApplication`: application workflow connecting an applicant to a job.
-
-## API Endpoints
-
-```txt
-GET /api/jobs/
-GET /api/jobs/<slug>/
-GET /api/applications/
-POST /api/applications/
-```
-
-`/api/jobs/` is public and returns only active, published jobs. It supports query parameters such as `q`, `work_mode`, `job_type`, `seniority`, `location`, and `is_premium`.
-
-`/api/applications/` requires an authenticated user with an applicant profile.
-
-## Backend Checks
-
-```bash
-cd backend
-source .venv/bin/activate
-python manage.py check
-python manage.py test
-```
-
-## Demo Data
-
-Static demo-only marketplace data lives in `backend/data/`:
-
-- `demo_companies.json`: 10 verified startup companies.
-- `demo_jobs.json`: 20 demo jobs across full-time and internship roles.
-- `demo_applicants.json`: 50 demo applicants across fullstack, AI, ML, data, frontend, backend, DevOps, and product roles.
-
-Use this data only for read-only demo experiences. Do not mix it with production user records, and do not expose public write access for demo files.
+Static files in `data/` are fictional demo fixtures. Claims such as verified startup
+or a sample candidate's experience are synthetic data, not established facts.
+Billing models remain dormant; no payment provider is enabled by their migrations.
