@@ -146,6 +146,8 @@ I chose these tests first because they protect trust. A premium job platform nee
 
 ## Implementation Log
 
+- An explicit preview settings module overrides database, upload storage and mail configuration to keep fictional local data isolated from configured remote services. The seed command requires the preview opt-in and SQLite, marks companies/roles as samples and preserves existing workflow state on repeat runs. Preview operator permissions are separate from recruiter authority; synthetic approval flags do not establish real identity evidence.
+
 - In-product updates are generated from public application events inside the same transaction, with one record per recipient/event. Candidates and reviewed company recruiters receive scoped links; private notes never generate notifications. Read status is idempotent and can only be changed by the recipient. No external email or messaging delivery is implied by the inbox.
 
 - Deletion is an explicit owner-scoped request with cancellation while pending. Operators record access removal or a reasoned decline; approval deactivates authentication and public visibility but deliberately reports erasure as pending. Submitted snapshots, employer-held copies and private files require a retention/erasure procedure before a real launch. The request workflow does not claim physical erasure or silently destroy application history.

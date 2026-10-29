@@ -21,6 +21,7 @@ staticfiles/
 *.sqlite3
 private_uploads/
 .test-uploads/
+.preview-uploads/
 
 # OS/editor
 .DS_Store
