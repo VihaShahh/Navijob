@@ -65,6 +65,21 @@ database for local validation. Production setup must provide a private secret,
 database, email delivery, HTTPS origins and private file storage; environment names
 are listed in the example files. Collect Django static files before serving admin.
 
+The real-browser journeys require Node.js 22+, a running isolated preview and a
+Chrome debugging session. They create fictional local accounts and exercise actual
+forms and cookies. Screenshots stay under `/tmp/navijob-browser-artifacts`.
+
+```bash
+google-chrome --headless=new --disable-gpu --remote-debugging-port=9341 --user-data-dir=/tmp/navijob-browser-review about:blank
+cd frontend
+npm run test:browser
+```
+
+Use `CDP_URL`, `NAVIJOB_BROWSER_URL`, `NAVIJOB_SAMPLE_PASSWORD` and
+`NAVIJOB_BROWSER_ARTIFACTS` to override local defaults. Journeys refuse a nonlocal
+frontend URL. The preview database must be seeded first; normal/remote databases
+are never used by the journey token helpers.
+
 ## Data and operations
 
 Candidates choose what to share through a signed application review. Submissions

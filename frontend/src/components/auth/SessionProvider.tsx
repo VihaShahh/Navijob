@@ -24,7 +24,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     void refresh();
     window.addEventListener("focus", refresh);
-    return () => { sequence.current++; window.removeEventListener("focus", refresh); };
+    return () => { window.removeEventListener("focus", refresh); };
   }, [refresh]);
   return <SessionContext.Provider value={{ ...state, refresh, signIn }}>{children}</SessionContext.Provider>;
 }
