@@ -35,7 +35,7 @@ Rules:
 - Write the summary in imperative mood, such as `add`, `define`, or `validate`.
 - Make one logical change per commit.
 - Do not mix unrelated refactors with feature work.
-- If a commit adds or changes a backend feature, update `UNDERSTANDING.md` in the same commit.
+- If a commit adds or changes a backend feature, update `docs/UNDERSTANDING.md` in the same commit.
 - Prefer small commits that can be reviewed independently.
 
 ## Coding Guidelines
@@ -63,7 +63,7 @@ Rules:
 ### Documentation
 
 - Keep `README.md` focused on how to run the project.
-- Keep `UNDERSTANDING.md` focused on why decisions were made.
+- Keep `docs/UNDERSTANDING.md` focused on why decisions were made.
 - Explain beginner-facing concepts in plain language before using framework terms.
 - Document tradeoffs when choosing one approach over another.
 - Store all design mockups, colour variants and reference images in the project-root `assets/` folder. Keep prompts, manifests and design notes in `designs/`, and add new images to the local `assets/index.html` gallery. Preserve previous versions and repair relative links whenever files move.

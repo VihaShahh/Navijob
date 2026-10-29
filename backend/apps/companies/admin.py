@@ -9,4 +9,4 @@ class CompanyAdmin(admin.ModelAdmin):
     list_filter = ("stage", "company_size", "industry", "is_verified", "is_premium_partner")
     prepopulated_fields = {"slug": ("name",)}
     search_fields = ("name", "industry", "location", "headquarters")
-    readonly_fields = ("created_at", "updated_at")
+    readonly_fields = ("created_at", "updated_at", "review_status", "review_feedback", "is_verified")

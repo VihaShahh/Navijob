@@ -16,4 +16,4 @@ class RecruiterProfileAdmin(admin.ModelAdmin):
     list_display = ("user", "company", "title", "can_manage_company", "is_verified", "updated_at")
     list_filter = ("is_verified", "can_manage_company", "company")
     search_fields = ("user__email", "user__first_name", "user__last_name", "company__name", "title")
-    readonly_fields = ("created_at", "updated_at")
+    readonly_fields = ("created_at", "updated_at", "is_verified", "authority_declaration_at")

@@ -1,8 +1,11 @@
 from django.contrib import admin
 from django.urls import include, path
 from apps.core.views import csrf_token, health
+from apps.core.moderation import ReviewDecisionView, ReviewQueueView
 
 urlpatterns = [
+    path("api/operator/reviews/", ReviewQueueView.as_view()),
+    path("api/operator/reviews/<str:kind>/<int:target_id>/", ReviewDecisionView.as_view()),
     path("api/health/", health),
     path("api/auth/csrf/", csrf_token),
     path("api/auth/", include("apps.accounts.urls")),
