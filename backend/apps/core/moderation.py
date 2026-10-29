@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.core.exceptions import ValidationError as ModelValidationError
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import serializers
@@ -68,7 +69,10 @@ def decide(user, kind, target_id, values):
         item.review_status = "approved" if approved else "rejected"
         item.review_feedback = values["reason"]
     item.is_verified = approved
-    item.save()
+    try:
+        item.save()
+    except ModelValidationError as error:
+        raise ValidationError(error.message_dict) from error
     return ReviewDecision.objects.create(kind=kind, target_id=item.pk, actor=user, decision=values["decision"], reason=values["reason"], method=values["method"], before=before, after=state_of(item, kind))
 
 

@@ -73,6 +73,7 @@ forms and cookies. Screenshots stay under `/tmp/navijob-browser-artifacts`.
 google-chrome --headless=new --disable-gpu --remote-debugging-port=9341 --user-data-dir=/tmp/navijob-browser-review about:blank
 cd frontend
 npm run test:browser
+npm run test:accessibility
 ```
 
 Use `CDP_URL`, `NAVIJOB_BROWSER_URL`, `NAVIJOB_SAMPLE_PASSWORD` and
@@ -85,7 +86,7 @@ are never used by the journey token helpers.
 Candidates choose what to share through a signed application review. Submissions
 keep immutable profile and PDF copies. Recruiters require separate company and
 authority review; private notes stay separate from candidate-visible history.
-Operators need an active staff account and the `core.moderate_marketplace`
+Operators need a confirmed application account, staff status and the `core.moderate_marketplace`
 permission. `/operator` provides company, authority and job review queues, listing
 report resolution and deletion-request review with recorded reasons.
 

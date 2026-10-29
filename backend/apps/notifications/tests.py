@@ -39,3 +39,15 @@ class UpdateTests(APITestCase):
         item.refresh_from_db()
         self.assertEqual(item.read_at, read_at)
         self.assertEqual(self.client.get("/api/updates/").data["unread_count"], 0)
+
+    def test_updates_keep_submitted_title_when_role_is_edited_back_to_draft(self):
+        job = self.application.job
+        original_title = job.title
+        job.title = "Private unpublished revision"
+        job.status = "draft"
+        job.review_status = "pending"
+        job.save()
+        move_application(self.application, self.recruiter, "reviewing", "submitted")
+        update = ApplicationUpdate.objects.filter(user=self.user).first()
+        self.assertIn(original_title, update.title)
+        self.assertNotIn("Private unpublished revision", update.title)

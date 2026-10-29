@@ -42,5 +42,5 @@ export async function GET() {
       };
     });
 
-  return NextResponse.json({ jobs });
+  return NextResponse.json({ demo_only: true, notice: "Fictional sample data; no live vacancies or verified partnerships.", jobs });
 }

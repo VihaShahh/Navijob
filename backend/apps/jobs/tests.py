@@ -23,6 +23,7 @@ def create_company():
         company_size=Company.CompanySize.ELEVEN_TO_FIFTY,
         industry="Developer Tools",
         is_verified=True,
+        review_status="approved",
         is_premium_partner=True,
     )
 

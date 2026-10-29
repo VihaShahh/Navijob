@@ -50,5 +50,5 @@ export async function GET(_request: Request, context: RouteContext) {
     company,
   };
 
-  return NextResponse.json({ job: enrichedJob });
+  return NextResponse.json({ demo_only: true, notice: "Fictional sample data; no live vacancy or verified partnership.", job: enrichedJob });
 }

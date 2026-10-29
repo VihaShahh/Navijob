@@ -9,4 +9,5 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 MEDIA_ROOT = BASE_DIR / ".preview-uploads"  # noqa: F405
 FRONTEND_URL = "http://localhost:3100"
 NAVIJOB_ALLOW_SAMPLE_SEED = True
+STORAGES = {"default": {"BACKEND": "django.core.files.storage.FileSystemStorage"}, "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"}}
 REST_FRAMEWORK = {**REST_FRAMEWORK, "DEFAULT_THROTTLE_RATES": {"account": "200/hour", "email": "100/hour"}}  # noqa: F405

@@ -37,7 +37,8 @@ h1, h2, h3 { line-height: 1.15; letter-spacing: -.045em; }
 .button:disabled { opacity: .55; cursor: wait; }
 .field { display: grid; gap: 7px; min-width: 0; }
 .field label { font-size: 13px; font-weight: 750; }
-.field input, .field textarea, .field select { min-height: 47px; width: 100%; padding: 11px 13px; border: 1px solid #a7b8aa; border-radius: var(--radius); color: var(--ink); background: white; }
+.field input, .field textarea, .field select { min-height: 47px; width: 100%; padding: 11px 13px; border: 1px solid #718677; border-radius: var(--radius); color: var(--ink); background: white; }
+.field input::placeholder, .field textarea::placeholder { color: #56685d; opacity: 1; }
 .field textarea { min-height: 130px; resize: vertical; }
 .field input[aria-invalid="true"], .field textarea[aria-invalid="true"] { border-color: var(--danger); }
 .field small { font-size: 12px; line-height: 1.5; }
@@ -52,6 +53,7 @@ h1, h2, h3 { line-height: 1.15; letter-spacing: -.045em; }
 .empty-state p { max-width: 450px; margin: 0 auto 24px; }
 .empty-mark { display: block; font-size: 38px; margin-bottom: 12px; }
 .panel { background: white; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; }
+.panel, .stack { min-width: 0; overflow-wrap: anywhere; }
 .stack { display: grid; gap: 22px; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
 .actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
@@ -113,6 +115,9 @@ h1, h2, h3 { line-height: 1.15; letter-spacing: -.045em; }
 .company-profile .panel h2 { font-size: 21px; }
 .company-roles { margin-top: 55px; }
 .workspace-content { padding-block: 45px; }
+.workspace-content h1 { font-size: clamp(30px, 4vw, 45px); font-weight: 850; margin-bottom: 16px; }
+.workspace-content h2 { font-size: 24px; font-weight: 800; }
+.workspace-content h3 { font-size: 19px; font-weight: 750; }
 .workspace-grid { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 38px; padding-block: 38px; min-height: 650px; }
 .workspace-sidebar { min-width: 0; border-right: 1px solid var(--line); padding-right: 24px; }
 .workspace-person { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
